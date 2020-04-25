@@ -1,0 +1,9 @@
+# Includes TOKEN + config.json
+res/*
+
+# Testings Folder
+tests/*
+
+# Python Generated Files
+__pycache__/*
+*.pyc
