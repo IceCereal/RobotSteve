@@ -39,7 +39,11 @@ if __name__ == '__main__':
 	with open(res / "TOKEN", 'r') as TokenObj:
 		TOKEN = TokenObj.read()
 
-	cogs = ['utils.stats.mcstats', 'utils.error_handler.handler']
+	cogs = ['utils.random.nuts',
+		'utils.stats.mcstats',
+		'utils.controls.backup',
+		'utils.controls.control',
+		'utils.error_handler.handler']
 
 	for cog in cogs:
 		print ("Loading Cog:\t", cog, "...")
