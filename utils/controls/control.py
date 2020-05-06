@@ -2,9 +2,16 @@ import discord
 from discord.ext import commands
 
 import os
+import sys
+from json import load
 from pathlib import Path
 from datetime import datetime
-from argparse import ArgumentParser
+import argparse
+
+class ArgumentParser(argparse.ArgumentParser):
+	def error(self, message):
+		return (sys.stderr)
+		
 
 class Control(commands.Cog):
 	def __init__(self, bot):
@@ -36,7 +43,7 @@ class Control(commands.Cog):
 	def make_raw(self, title : str, key_list : list):
 		messages = []
 
-		temp_message = "```" + title + "\n"
+		temp_message = "```" + title + "\n\n"
 
 		character_count = len(temp_message)
 		for (key, value) in key_list:
@@ -45,7 +52,7 @@ class Control(commands.Cog):
 				messages.append(temp_message)
 				temp_message = "```" + title + "\n"
 
-			temp_message += str(key) + ": " + str(value)
+			temp_message += str(key) + ":\t" + str(value)
 			if "\n" not in value:
 				temp_message += "\n"
 			character_count += len(str(key)) + len(str(value)) + 4
@@ -92,7 +99,7 @@ class Control(commands.Cog):
 
 		# This is a bad fix to a -f=[NAME] arg not being there in the message, but eh. It works
 		if " -f=" not in ctx.message.content and " --filename=" not in ctx.message.content:
-			await ctx.channel.send("Missing argument: --filename, -f. Type ++help full-stats to find out more.")
+			await ctx.channel.send("Missing argument: --filename, -f. Type ++help full-stats")
 			return
 
 		parser = ArgumentParser()
@@ -101,7 +108,12 @@ class Control(commands.Cog):
 		parser.add_argument("--force-force", action='store_true')
 		parser.add_argument("--filename", '-f', required=True)
 
-		args = parser.parse_args(ctx.message.content.split()[1:])
+		try:
+			args = parser.parse_args(ctx.message.content.split()[1:])
+		except:
+			# I can't catch this exception for whatever reason...? Anyway, it continues as per normal
+			# Even if there are arguments that don't match, for example: `--raww` is ignored
+			pass
 
 		files = {
 			'banned-ips': 'banned-ips.json',
@@ -131,9 +143,9 @@ class Control(commands.Cog):
 				return
 			
 			sensitive_fields = ["rcon.port", "enable-rcon", "rcon.password"]
+			server_properties = []
 
 			with open(minecraft_path / files["server-properties"], 'r') as F:
-				server_properties = []
 
 				for line in F:
 					if not line.startswith("#"):
@@ -153,6 +165,24 @@ class Control(commands.Cog):
 					reply_texts = self.make_raw("Full-Stats: Server Properties", server_properties)
 				else:
 					reply_embeds = self.make_embeds("Full-Stats: Server Properties", values, server_properties)
+
+		elif args.filename == "whitelist":
+			whitelist_properties = []
+
+			with open(minecraft_path / files["whitelist"], 'r') as F:
+				whitelist = load(F)
+
+				for user in whitelist:
+					key = user["name"]
+					value = user["uuid"]
+
+					whitelist_properties.append((key, value))
+
+				if args.raw:
+					reply_texts = self.make_raw("Full-Stats: Whitelist", whitelist_properties)
+				else:
+					reply_embeds = self.make_embeds("Full-Stats: Whitelist", values, whitelist_properties)
+				
 
 		if len(reply_embeds) > 0:
 			for i, embed in enumerate(reply_embeds):
