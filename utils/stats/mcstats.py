@@ -1,8 +1,8 @@
-import grequests
 from json import load
 from pathlib import Path
 from datetime import datetime
 from argparse import ArgumentParser
+from mcipc.query import Client
 
 import discord
 from discord.ext import commands
@@ -11,10 +11,9 @@ res = Path("res")
 
 class MinecraftStats(commands.Cog):
 	def __init__(self, bot):
-		self.url = "https://api.mcsrvstat.us/2/"
 		self.bot = bot
 
-	@commands.cooldown(1, 60, commands.cooldowns.BucketType.channel)
+	@commands.cooldown(1, 5, commands.cooldowns.BucketType.channel)
 	@commands.command(
 		name = "stat",
 		aliases = ["stats"],
@@ -38,11 +37,13 @@ class MinecraftStats(commands.Cog):
 		with open(res / "config.json", 'r') as F:
 			config = load(F)
 
-		rs = [grequests.get(self.url + config["ip"] + ":" + config["port"])]
-		r = grequests.map(rs)[0]
+		online = True
+		try:
+			with Client(config["ip"], int(config["query-port"])) as client:
+				full_stats = client.full_stats
 
-		stats = r.json()
-		online = stats['online']
+		except ConnectionRefusedError:
+			online = False
 
 		title = "MECCraft - Status: "
 		if online:
@@ -50,7 +51,7 @@ class MinecraftStats(commands.Cog):
 		else:
 			title += "Offline"
 
-		if stats['online']:
+		if online:
 			values = [127, 255, 0]
 		else:
 			values = [208, 2, 7]
@@ -61,21 +62,15 @@ class MinecraftStats(commands.Cog):
 
 		if online:
 			if not raw:
-				embed.add_field(name="IP", value=stats['ip'], inline=False)
-				embed.add_field(name="Port", value=stats['port'], inline=False)
-				embed.add_field(name="MOTD", value=stats['motd']['clean'][0], inline=False)
-				embed.add_field(name="Players Online", value=str(stats['players']['online']) + " / " + str(stats['players']['max']), inline=False)
-				embed.add_field(name="Players", value=", ".join(stats['players']['list']), inline=False)
-				embed.add_field(name="Version", value=stats['version'], inline=False)
-				embed.add_field(name="Software", value=stats['software'], inline=False)
+				embed.add_field(name="IP", value=config['ip'], inline=True)
+				embed.add_field(name="Port", value=config['port'], inline=True)
+				embed.add_field(name="MOTD", value=full_stats.host_name, inline=True)
+				embed.add_field(name="Players Online", value=str(full_stats.num_players) + " / " + str(full_stats.max_players), inline=True)
+				embed.add_field(name="Players", value=", ".join(full_stats.players), inline=False)
+				embed.add_field(name="Version", value=full_stats.version, inline=True)
 			else:
-				for field in stats:
-					if type(stats[field]) == dict:
-						embed.add_field(name="**"+field+"**", value="-----------", inline=False)
-						for innerField in stats[field]:
-							embed.add_field(name=innerField, value=str(stats[field][innerField]))
-					else:
-						embed.add_field(name=field, value=str(stats[field]), inline=False)
+				for key, value in zip(full_stats._fields, full_stats):
+					embed.add_field(name=str(key), value=str(value), inline=True)
 
 		embed.set_thumbnail(url="https://raw.githubusercontent.com/IceCereal/RobotSteve/master/res/robotsteve.png")
 
