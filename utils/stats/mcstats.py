@@ -66,7 +66,10 @@ class MinecraftStats(commands.Cog):
 				embed.add_field(name="Port", value=config['port'], inline=True)
 				embed.add_field(name="MOTD", value=full_stats.host_name, inline=True)
 				embed.add_field(name="Players Online", value=str(full_stats.num_players) + " / " + str(full_stats.max_players), inline=True)
-				embed.add_field(name="Players", value=", ".join(full_stats.players), inline=False)
+				try:
+					embed.add_field(name="Players", value=", ".join(full_stats.players), inline=False)
+				except:
+					embed.add_field(name="Players", value="No one's online", inline=False)
 				embed.add_field(name="Version", value=full_stats.version, inline=True)
 			else:
 				for key, value in zip(full_stats._fields, full_stats):
