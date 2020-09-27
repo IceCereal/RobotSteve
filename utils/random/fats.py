@@ -17,15 +17,15 @@ class Fats(commands.Cog):
 		message = ''
 		user = ctx.message.author
 
-		fatness = randint(0, 100)
-		loneliness = randint(0, 100)
-		food_amount = (randint(0, 100)) / 5
-		crappiness = randint(0, 100)
+		rand_nos = []
 
-		message += "username is {}% fat.\n".format(fatness)
-		message += "username is really feeling {}% lonely right now.\n".format(loneliness)
-		message += "username eats {}kg of food every day.\n".format(food_amount)
-		message += "username is indeed, {}% crap at Minecraft.".format(crappiness)
+		for i in range(4):
+			rand_nos.append(randint(0, 100))
+
+		message += "username is {}% fat.\n".format(rand_nos[0])
+		message += "username is really feeling {}% lonely right now.\n".format(rand_nos[1])
+		message += "username eats {}kg of food every day.\n".format(rand_nos[2] / 5)
+		message += "username is indeed, {}% crap at Minecraft.".format(rand_nos[3])
 
 		message.replace('username', user.mention)
 
