@@ -21,7 +21,7 @@ class Blade(commands.Cog):
         user = ctx.message.author
 
         #quotes file
-        quotes = open("res/quote.txt","r")
+        quotes = open("txt/quote.txt","r")
         quotes = quotes.read().split('\n')
         length = len(quotes)
 
