@@ -16,7 +16,7 @@ class Blade(commands.Cog):
         description = "chooses a random Sun Tzu art of war quote from a predefined text file",
         enabled = True
     )
-    async def blade(self,ctx):
+    async def blade(self,ctx,arg):
 
         user = ctx.message.author
 
@@ -25,17 +25,12 @@ class Blade(commands.Cog):
         quotes = quotes.read().split('\n')
         length = len(quotes)
 
-        #randomizer
-        time = datetime.datetime.now()
-        mic = time.microsecond
-        seed(mic)
-
-        i = randint(0,length-1)
-
         try:
+            i = int(arg)
+
             if i!=length-1:
                 await ctx.channel.send("```"+quotes[i]+"\n~Technoblade"+"```")
-            else:
+            else if i == length:
                 #second randomizer for number of years of 'training'
                 time = datetime.datetime.now()
                 mic = time.microsecond
