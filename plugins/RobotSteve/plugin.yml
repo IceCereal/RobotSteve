@@ -1,0 +1,7 @@
+main: me.Meesum.RobotSteve.Main
+name: RobotSteve
+version: 1.0
+author: Meesum
+
+commands:
+  fats:
