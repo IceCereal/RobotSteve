@@ -327,7 +327,8 @@ def get_individual_stats(username):
 			'total_time_played': get_time_from_secs(all_stats[username]['total_time_played']),
 			'longest_session': get_time_from_secs(all_stats[username]['longest_session']),
 			'percent': (all_stats[username]['total_time_played'] / sum_of_playtimes) * 100,
-			'msgs_sent': all_stats[username]['msgs_sent']
+			'msgs_sent': all_stats[username]['msgs_sent'],
+			'login_count': all_stats[username]['login_count']
 		}
 
 	return {

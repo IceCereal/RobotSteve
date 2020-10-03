@@ -155,9 +155,9 @@ class MinecraftStats(commands.Cog):
 
 				embed_gametime.add_field(name="Total gametime", value=user_stats['total_time_played'], inline=True)
 				embed_gametime.add_field(name="Longest session", value=user_stats['longest_session'], inline=True)
-				embed_gametime.add_field(name="Percentage of time played", value='{:.3f}'.format(user_stats['percent']), inline=True)
-				embed_gametime.add_field(name="Number of messages sent", value=user_stats['msgs_sent'], inline=True)
-				
+				embed_gametime.add_field(name="Percentage of time played", value='{:.3f}%'.format(user_stats['percent']), inline=True)
+				embed_gametime.add_field(name="Number of messages", value=user_stats['msgs_sent'], inline=True)
+				embed_gametime.add_field(name="Number of times logged in/out", value=user_stats['login_count'], inline=True)
 
 				await ctx.channel.send(embed = embed_gametime)
 
