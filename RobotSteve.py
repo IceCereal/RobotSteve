@@ -40,8 +40,9 @@ if __name__ == '__main__':
 		TOKEN = TokenObj.read()
 
 	cogs = ['utils.random.nuts',
+		'utils.random.fats',
+		'utils.random.blade',
 		'utils.stats.mcstats',
-		'utils.controls.backup',
 		'utils.controls.control',
 		'utils.error_handler.handler']
 

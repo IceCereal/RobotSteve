@@ -91,11 +91,13 @@ class MinecraftStats(commands.Cog):
 		aliases = ["stats"],
 		brief = "get player statistics",
 		enabled = True,
+		usage = "[all | username]",
 		description = "Get all game player statistics"
 	)
 	async def stat(self, ctx, *args):
 		if len(args) != 1:
-			await ctx.channel.send('Invalid format!')
+			await ctx.channel.send('Missing argument! Try ++stats [`all` | `username`. Ex: `++stats all` or `++stats IceCereal`')
+			return
 
 		username = args[0]
 		

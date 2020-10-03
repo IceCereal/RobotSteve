@@ -4,6 +4,9 @@ res/*
 # Testings Folder
 tests/*
 
+# RobotSteve Generated Files
+log_cache/*
+
 # Python Generated Files
 __pycache__/*
 *.pyc

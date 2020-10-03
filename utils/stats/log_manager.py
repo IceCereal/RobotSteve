@@ -10,7 +10,7 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 
-logs = Path('logs')
+logs = Path('/home/mc/server/logs/')
 
 def get_time_from_secs(time):
 	
@@ -150,7 +150,7 @@ def read_all_logs():
 	
 	latest_log = {}
 
-	for (root, dir, files) in os.walk('logs'):
+	for (root, dir, files) in os.walk(logs):
 		all_files = files
 
 	for file in all_files:
@@ -248,7 +248,7 @@ def read_all_logs():
 			all_stats[user]['longest_session'] = real_logs[user]['longest_session']
 
 
-	shutil.rmtree('log_cache')
+	# shutil.rmtree('log_cache')
 
 	return all_stats
 
