@@ -7,7 +7,7 @@ from mcipc.query import Client
 import discord
 from discord.ext import commands
 
-from utils.stats.manage_logs import get_individual_stats, get_all_stats
+from utils.stats.log_manager import get_individual_stats, get_all_stats
 
 res = Path("res")
 
