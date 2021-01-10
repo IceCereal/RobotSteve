@@ -10,7 +10,7 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 
-logs = Path('/home/mc/server/logs/')
+logs = Path('/home/mc/server/logs/') # Path to the logs folder
 
 def get_time_from_secs(time):
 	
@@ -22,7 +22,6 @@ def get_time_from_secs(time):
 def extract_file(file_name):
 
 	try:
-		
 		if not os.path.exists('log_cache'): 
 			os.makedirs('log_cache') 
 
@@ -195,8 +194,9 @@ def read_all_logs():
 						if(real_logs[user]['longest_session'] < int(diff.total_seconds())):
 							real_logs[user]['longest_session'] = int(diff.total_seconds())
 
-					except IndexError:
-						print("User is still online somehow")
+					except Exception as e:
+						print("Something bad happened: {}".format(e))
+						print("{} is still online somehow".format(user))
 				
 				else:
 
