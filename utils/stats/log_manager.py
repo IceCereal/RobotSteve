@@ -10,7 +10,7 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 
-logs = Path('/home/mc/server/logs/') # Path to the logs folder
+logs = Path("{}/logs".format(os.environ["MINECRAFT_PATH"])) # Path to the logs folder
 
 def get_time_from_secs(time):
 	
