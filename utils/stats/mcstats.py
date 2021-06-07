@@ -41,7 +41,7 @@ class MinecraftStats(commands.Cog):
 		online = True
 		try:
 			with Client(config["ip"], int(config["query-port"])) as client:
-				full_stats = client.full_stats
+				full_stats = client.stats(full=True)
 
 		except ConnectionRefusedError:
 			online = False
