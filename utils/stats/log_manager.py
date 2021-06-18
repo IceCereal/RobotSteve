@@ -114,13 +114,15 @@ def read_log_file(file_name, log_date = datetime.now()):
 
 		# User message log
 
-		elif 'Async Chat Thread' in log:
+		elif '[Server thread/INFO]: <' in log:
 
-			split_log = log.split(' ')
+			# split_log = log.split(' ')
 
-			time = split_log[0]
 
-			username = split_log[6][1:][:-1]
+			# time = split_log[0]
+
+			# username = split_log[6][1:][:-1]
+			username = log[log.find('<') + 1:log.find('>')]
 
 			if username not in file_log:
 				file_log[username] = {}
@@ -166,7 +168,7 @@ def read_all_logs():
 
 	for file in zip_files:
 
-		log_date = datetime.strptime(file, '%Y-%m-%d-{}'.format(file[-1]))
+		log_date = datetime.strptime(file, '%Y-%m-%d-{}'.format(file[11:]))
 
 		if file not in zip_files_logs:
 			zip_files_logs[file] = {}
