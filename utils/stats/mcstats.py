@@ -145,6 +145,14 @@ class MinecraftStats(commands.Cog):
 			
 			await ctx.channel.send(embed = embed_msgs_stat)
 
+			embed_death_count = discord.Embed(title=title, colour=discord.Colour.from_rgb(*rgb_values))
+
+			embed_death_count.add_field(name="Rank", value=all_stats['death_count']['ranks'], inline=True)
+			embed_death_count.add_field(name="Username", value=all_stats['death_count']['usernames'], inline=True)
+			embed_death_count.add_field(name="Number of deaths", value=all_stats['death_count']['deaths'], inline=True)
+			
+			await ctx.channel.send(embed = embed_death_count)
+
 
 		else:
 			user_stats = get_individual_stats(username)
@@ -162,6 +170,7 @@ class MinecraftStats(commands.Cog):
 				embed_gametime.add_field(name="Percentage of time played", value='{:.3f}%'.format(user_stats['percent']), inline=True)
 				embed_gametime.add_field(name="Number of messages", value=user_stats['msgs_sent'], inline=True)
 				embed_gametime.add_field(name="Number of times logged in/out", value=user_stats['login_count'], inline=True)
+				embed_gametime.add_field(name="Number of deaths", value=user_stats['death_count'], inline=True)
 
 				await ctx.channel.send(embed = embed_gametime)
 
