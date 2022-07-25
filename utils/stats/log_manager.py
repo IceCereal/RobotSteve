@@ -10,7 +10,11 @@ import shutil
 from datetime import datetime
 from pathlib import Path
 
+from utils.stats.deathcounter import get_death_scores
+
 logs = Path("{}/logs".format(os.environ["MINECRAFT_PATH"])) # Path to the logs folder
+scoreboard_path = "{}/world/data/scoreboard.dat".format(os.environ["MINECRAFT_PATH"]) # Path to the scoreboard file
+death_scores = get_death_scores(scoreboard_path)
 
 def get_time_from_secs(time):
 	
@@ -280,6 +284,11 @@ def get_all_stats():
 	msg_ranks['usernames'] = ''
 	msg_ranks['msgs_sent'] = ''
 
+	death_count = {}
+	death_count['ranks'] = ''
+	death_count['usernames'] = ''
+	death_count['deaths'] = ''
+
 
 
 	for index, user in enumerate(sorted(all_stats.items(), key = lambda i: i[1]['total_time_played'], reverse = True)):
@@ -306,11 +315,19 @@ def get_all_stats():
 		msg_ranks['usernames'] += user[0] + '\n'
 		msg_ranks['msgs_sent'] += str(all_stats[user[0]]['msgs_sent']) + '\n'
 
+	i = 0
+	for user in death_scores:
+		death_count['ranks'] += str(i + 1) + '\n'
+		i += 1
+		death_count['usernames'] += user + '\n'
+		death_count['deaths'] += death_scores[user] + '\n'
+
 	return {
 		'gametime': gametime,
 		'session_ranks': session_ranks,
 		'logged_in_off': logged_in_off,
-		'msg_ranks': msg_ranks
+		'msg_ranks': msg_ranks,
+		'death_count':death_count
 	}
 
 
@@ -318,19 +335,26 @@ def get_individual_stats(username):
 
 	all_stats = read_all_logs()
 
+	death_count = 0
+
 	if username in all_stats:
 
 		sum_of_playtimes = 0
 
 		for usernames in all_stats:
 			sum_of_playtimes += all_stats[usernames]['total_time_played']
-
+		
+		if username in death_scores:
+			death_count = death_scores[username]
+			print(username + ": " + death_count)
+		
 		return {
 			'total_time_played': get_time_from_secs(all_stats[username]['total_time_played']),
 			'longest_session': get_time_from_secs(all_stats[username]['longest_session']),
 			'percent': (all_stats[username]['total_time_played'] / sum_of_playtimes) * 100,
 			'msgs_sent': all_stats[username]['msgs_sent'],
-			'login_count': all_stats[username]['login_count']
+			'login_count': all_stats[username]['login_count'],
+			'death_count': death_count
 		}
 
 	return {
